@@ -1,0 +1,22 @@
+export function findNestedKeyValues(obj, keyToFind, depthLimit = 100) {
+  const result = {}
+
+  function search(currentObj, currentKey, depth = 0) {
+    if (depth >= depthLimit) {
+      throw new Error('Maximum depth limit exceeded')
+    }
+    if (currentObj) {
+      Object.keys(currentObj).forEach((key) => {
+        const newKey = currentKey ? `${currentKey}.${key}` : key
+        if (key === keyToFind && currentObj[key]) {
+          result[newKey] = currentObj[key]
+        } else if (typeof currentObj[key] === 'object') {
+          return search(currentObj[key], newKey, depth + 1)
+        }
+      })
+    }
+  }
+
+  search(obj, '')
+  return result;
+}
